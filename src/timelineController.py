@@ -15,17 +15,32 @@ class TimelineController(QtWidgets.QWidget):
     def __init__(self, parent=None, duration=30526):
         super().__init__()
         self.parent = parent
-        self.duration = duration
         self.minimumHeight = 50
+        self.timelineControlGrid = QtWidgets.QGridLayout(self)
+        self.timelineControlGrid.setContentsMargins(0, 0, 0, 0)
+        self.timelineControlGrid.setObjectName("verticalLayout")
+
+        self.toStart = QtWidgets.QPushButton(self)
+        self.toStart.setText("\u23EE")
+        self.fastBackward = QtWidgets.QPushButton(self)
+        self.fastBackward.setText("\u23EA")
+        self.playPause = QtWidgets.QPushButton(self)
+        self.playPause.setText("\u23EF")
+        self.fastForward = QtWidgets.QPushButton(self)
+        self.fastForward.setText("\u23E9")
+        self.toEnd = QtWidgets.QPushButton(self)
+        self.toEnd.setText("\u23ED")
+
         self.timelineSlider = QtWidgets.QSlider(self)
         self.timelineSlider.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.timelineSlider.setMaximum(self.duration)
-        self.timelineSlider.adjustSize()
 
+        self.timelineControlGrid.addWidget(self.toStart, 0, 0)
+        self.timelineControlGrid.addWidget(self.fastBackward, 0, 1)
+        self.timelineControlGrid.addWidget(self.playPause, 0, 2)
+        self.timelineControlGrid.addWidget(self.fastForward, 0, 3)
+        self.timelineControlGrid.addWidget(self.toEnd, 0, 4)
+        self.timelineControlGrid.addWidget(self.timelineSlider, 1, 0, 1, 5)
 
-
-    def resizeEvent(self, a0: QtGui.QResizeEvent):
-        self.timelineSlider.resize(self.width(), self.height())
 
 
 def main():

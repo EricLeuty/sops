@@ -32,23 +32,20 @@ class VideoWidget(QVideoWidget):
         if time <= self.duration:
             self.player.setPosition(time)
 
-    def play(self):
-        self.player.play()
+    def setPlaymode(self, state):
+        if state == 0:
+            self.player.play()
+        elif state == 1:
+            self.player.pause()
 
-    def pause(self):
-        self.player.pause()
-
-
-
-
-
+    def setPlaybackSpeed(self, speed):
+        self.player.setPlaybackRate(speed)
 
 
 def main():
     app = QtWidgets.QApplication([])
     widget = VideoWidget()
     widget.player.play()
-    print(app.allWindows())
     widget.show()
     app.exec_()
 

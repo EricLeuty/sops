@@ -11,14 +11,18 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from timelineController import *
 from videoWidget import *
-import threading
-
-
 
 class MediaViewer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
+
+        self.duration = 30526
+        self.playmode = 1
+        self.position = 0
+        self.playbackSpeed = 1
+
+        self.resize(1200, 800)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -32,19 +36,58 @@ class MediaViewer(QtWidgets.QWidget):
         self.audioGroup = QtWidgets.QWidget(self)
         self.audioGroup.setObjectName("audioGroup")
         self.verticalLayout.addWidget(self.audioGroup, stretch=4)
+        self.updateMediaState()
+
+        self.timelineController.timelineSlider.sliderMoved.connect(lambda x: self.updatePosition(x))
+        self.timelineController.playPause.clicked.connect(lambda x: self.updatePlaymode())
+        self.timelineController.toStart.clicked.connect(lambda x: self.updatePosition(0))
+        self.timelineController.toEnd.clicked.connect(lambda x: self.updatePosition(self.duration))
+        self.timelineController.fastBackward.clicked.connect(lambda x: self.fastBackward())
+        self.timelineController.fastForward.clicked.connect(lambda x: self.fastForward())
 
 
-        self.timelineController.timelineSlider.valueChanged.connect(lambda x: self.videoGroup.setPosition(x))
-        self.timelineController.timelineSlider.sliderMoved.connect(lambda x: self.videoGroup.setPosition(x))
+    def updatePlaymode(self):
+        if self.playmode == 1:
+            self.playmode = 0
+        elif self.playmode == 0 and self.playbackSpeed == 1.0:
+            self.playmode = 1
+        elif self.playmode == 0 and self.playbackSpeed != 1.0:
+            self.playbackSpeed = 1.0
+        self.updateMediaState()
+
+    def updatePosition(self, position):
+        self.position = position
+        self.updateMediaState()
+
+    def fastBackward(self):
+        if self.playbackSpeed == 1.0:
+            self.playbackSpeed *= -1.0
+        elif self.playbackSpeed < 0.0:
+            self.playbackSpeed *= 2.0
+        elif self.playbackSpeed > 1.0:
+            self.playbackSpeed /= 2.0
+        self.updateMediaState()
+
+    def fastForward(self):
+        if self.playbackSpeed >= 1.0:
+            self.playbackSpeed *= 2.0
+        elif self.playbackSpeed < -1.0:
+            self.playbackSpeed /= 2.0
+        elif self.playbackSpeed == -1.0:
+            self.playbackSpeed = 1.0
+        self.updateMediaState()
+
+    def updateMediaState(self):
+        self.videoGroup.setPlaymode(self.playmode)
+        self.videoGroup.setPlaybackSpeed(self.playbackSpeed)
+        self.timelineController.timelineSlider.setMaximum(self.duration)
+
 
 
 def main():
     app = QtWidgets.QApplication([])
     widget = MediaViewer()
-
     widget.show()
-    widget.videoGroup.player.play()
-    widget.videoGroup.player.pause()
 
     app.exec_()
 
