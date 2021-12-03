@@ -19,7 +19,7 @@ class VideoWidget(QVideoWidget):
         super().__init__()
         self.parent = parent
         self.duration = 0
-        self.path = QtCore.QUrl.fromLocalFile('/home/eric/PycharmProjects/sops/session/sample1.mp4')
+        self.path = QtCore.QUrl.fromLocalFile('/home/eric/PycharmProjects/sops/Sessions/LOPUS.mp4')
         self.player = QMediaPlayer()
         self.player.setVideoOutput(self)
         self.player.setMedia(QMediaContent(self.path))
