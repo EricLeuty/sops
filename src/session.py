@@ -1,40 +1,36 @@
+import os
 import pickle
 from code import *
-from behaviorData import *
+from observation import *
 
 
 class Session(object):
-    def __init__(self, name, codeSet=None, mediaPaths=None, studentSet=None):
+    def __init__(self, name, code_set=None, path_media=None, student_set=None):
         self.name = name
-        self.code_set = codeSet
-        self.mediaPaths = mediaPaths
-        self.studentSet = studentSet
-        self.data = BehaviorSet()
+        self.codeset = code_set
+        self.path_media = path_media
+        self.student_set = student_set
+        self.data = DataSet()
 
 
-    def setCodeSet(self, codeSet):
-        if(isinstance(codeSet, CodeSet)):
-            self.code_set = codeSet
-
-
-    def addDataPoint(self, dataPoint):
-        self.data.addDataPoint(dataPoint)
+    def add_datum(self, data_point):
+        self.data.add_datum(data_point)
 
 
     def save(self):
-        fPath = Path(os.getcwd()).parent / "Sessions" / self.name
+        session_path = Path(os.getcwd()).parent / "Sessions" / self.name
         try:
-            f = open(fPath, "wb")
+            f = open(session_path, "wb")
             pickle.dump(self, f)
             f.close()
         except:
             print("Error: file not found.")
 
 
-    def load(sessionName):
-        fPath = Path(os.getcwd()).parent / "Sessions" / sessionName
+    def load(session_name):
+        session_path = Path(os.getcwd()).parent / "Sessions" / session_name
         try:
-            f = open(fPath, "rb")
+            f = open(session_path, "rb")
             session = pickle.load(f)
             f.close()
             return session
@@ -46,6 +42,30 @@ class Session(object):
         print(self.name)
 
 
+class SessionSet(object):
+    def __init__(self):
+        self.sessions = {}
+
+
+    def add_session(self, session):
+        self.sessions.update({session.name: session})
+
+
+    def remove_session(self, session_name):
+        self.sessions.pop(session_name)
+
+    def load(self):
+        print("")
+
+    def save(self):
+        print("")
+
+
+
 if __name__ == '__main__':
-    session1 = Session.load("test_session")
-    session1.print()
+    students = ["student1", "student2", "student3", "student4", "student5",
+                "student6", "student7", "student8", "student9", "student10"]
+    media = Path(os.getcwd()).parent / "Media" / "LOPUS.mp4"
+    codes = CodeSet.load("LOPUS_student_behavior")
+    session1 = Session("Queens_LOPUS", code_set=codes, path_media=media, student_set=students)
+    session1.save()

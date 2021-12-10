@@ -5,7 +5,8 @@ from PyQt5.QtCore import QUrl
 import PyQt5.QtWidgets
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from mediaViewer import *
+from media_viewer import *
+from session import *
 
 
 
@@ -16,8 +17,9 @@ from mediaViewer import *
 
 def main():
     app = QtWidgets.QApplication([])
-    widget = QtWidgets.QMainWindow()
-    widget.showFullScreen()
+    widget = MediaViewer()
+
+    widget.show()
     app.exec_()
 
 if __name__ == '__main__':

@@ -19,26 +19,26 @@ class VideoWidget(QVideoWidget):
         super().__init__()
         self.parent = parent
         self.duration = 0
-        self.path = QtCore.QUrl.fromLocalFile('/home/eric/PycharmProjects/sops/Sessions/LOPUS.mp4')
+        self.path = QtCore.QUrl.fromLocalFile('/home/eric/PycharmProjects/sops/Media/LOPUS.mp4')
         self.player = QMediaPlayer()
         self.player.setVideoOutput(self)
         self.player.setMedia(QMediaContent(self.path))
-        self.player.durationChanged.connect(lambda x: self.setDuration(x))
+        self.player.durationChanged.connect(lambda x: self.set_duration(x))
 
-    def setDuration(self, duration):
+    def set_duration(self, duration):
         self.duration = duration
 
-    def setPosition(self, time):
+    def set_position(self, time):
         if time <= self.duration:
             self.player.setPosition(time)
 
-    def setPlaymode(self, state):
+    def set_playmode(self, state):
         if state == 0:
             self.player.play()
         elif state == 1:
             self.player.pause()
 
-    def setPlaybackSpeed(self, speed):
+    def set_playback_speed(self, speed):
         self.player.setPlaybackRate(speed)
 
 
