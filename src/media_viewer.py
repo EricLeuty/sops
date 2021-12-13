@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from timeline_controller import *
-from videoWidget import *
+from video_widget import *
 
 class MediaViewer(QtWidgets.QWidget):
     def __init__(self, parent=None, show_coding_buttons=False):
