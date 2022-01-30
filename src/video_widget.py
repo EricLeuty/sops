@@ -12,6 +12,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
+import os
+from pathlib import Path
 
 
 class VideoWidget(QVideoWidget):
@@ -19,10 +21,11 @@ class VideoWidget(QVideoWidget):
         super().__init__()
         self.parent = parent
         self.duration = 0
-        self.path = QtCore.QUrl.fromLocalFile('/home/eric/PycharmProjects/sops/Media/LOPUS.mp4')
+        self.path = Path(os.getcwd()).parent / "Media" / "LOPUS.mp4"
+        path_qt = QtCore.QUrl.fromLocalFile(str(self.path))
         self.player = QMediaPlayer()
         self.player.setVideoOutput(self)
-        self.player.setMedia(QMediaContent(self.path))
+        self.player.setMedia(QMediaContent(path_qt))
         self.player.durationChanged.connect(lambda x: self.set_duration(x))
 
     def set_duration(self, duration):
