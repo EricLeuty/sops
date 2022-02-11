@@ -8,8 +8,8 @@ class MainWidget(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.sessions = ["Queens_LOPUS"]
-        self.codes = ["LOPUS_student_behavior"]
+        self.sessions = ["Queens_LOPUS", "session2"]
+        self.codesets = ["LOPUS_student_behavior"]
         self.resize(960, 720)
         self.setCentralWidget(HomeWidget(self))
 

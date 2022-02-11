@@ -33,6 +33,13 @@ class SessionsWidget(QtWidgets.QWidget):
             widget = CodingWidget(self.parent().parent(), session_name)
             self.parentWidget().parentWidget().setCentralWidget(widget)
 
+    def delete_session(self, current_item):
+        if current_item is not None:
+            session_name = current_item.text()
+            self.parentWidget().parentWidget().sessions.remove(session_name)
+
+        #must add update active_widget
+
 
 
 
