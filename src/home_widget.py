@@ -1,12 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from sessions_widget import *
-from code_settings_widget import *
+from sops_widget import SOPSWidget
+from sessions_widget import SessionsWidget
+from code_settings_widget import CodeSettingsWidget
 
 
-class HomeWidget(QtWidgets.QWidget):
+class HomeWidget(SOPSWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-
+        self.setObjectName("home_widget")
         self.grid_layout = QtWidgets.QGridLayout(self)
 
         self.button_sessions = QtWidgets.QPushButton(text="Sessions")
@@ -21,6 +22,7 @@ class HomeWidget(QtWidgets.QWidget):
 
         self.button_sessions.clicked.connect(lambda state: self.open_sessions())
         self.button_codes.clicked.connect(lambda state: self.open_codesets())
+
 
 
     def open_codesets(self):

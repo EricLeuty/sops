@@ -9,9 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from sops_widget import SOPSWidget
 
-
-class TimelineController(QtWidgets.QWidget):
+class TimelineController(SOPSWidget):
     def __init__(self, parent=None, show_coding_buttons=False, duration=30526):
         super().__init__(parent)
         self.minimumHeight = 100
@@ -34,7 +34,7 @@ class TimelineController(QtWidgets.QWidget):
             self.button_show_data.setCheckable(True)
 
             self.button_add_code.clicked.connect(lambda state: self.parentWidget().parentWidget().show_code_widget())
-            self.button_show_data.toggled.connect(lambda state: self.show_codes())
+            self.button_show_data.toggled.connect(self.show_codes)
 
             self.timelineControlGrid.addWidget(self.button_add_code, 0, 0, 1, 2)
             self.timelineControlGrid.addWidget(self.button_show_data, 0, 3, 1, 2)

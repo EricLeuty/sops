@@ -1,10 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from code import *
-from home_window import *
+from sops_widget import SOPSWidget
+from codes import CodeSet, CodeItem
 
-class CodesetEditWidget(QtWidgets.QWidget):
+
+class CodesetEditWidget(SOPSWidget):
     def __init__(self, parent=None, codeset_name=None):
         super().__init__(parent)
+        self.setObjectName("codeset_edit_widget")
 
         self.codeset = CodeSet.load(codeset_name)
 
@@ -26,9 +28,6 @@ class CodesetEditWidget(QtWidgets.QWidget):
 
         self.confirm = QtWidgets.QPushButton(text="Done")
 
-
-
-
         self.grid_layout.addWidget(self.button_add_code, 0, 0, 1, 1)
         self.grid_layout.addWidget(self.button_delete_code, 1, 0, 1, 1)
         self.grid_layout.addWidget(self.button_back, 2, 0, 1, 1)
@@ -44,7 +43,6 @@ class CodesetEditWidget(QtWidgets.QWidget):
         self.confirm.clicked.connect(lambda state: self.confirm_change(self.codes.currentItem()))
         self.button_back.clicked.connect(lambda state: self.back())
 
-
     def code_selected(self, current_item):
         if current_item is not None:
 
@@ -58,10 +56,8 @@ class CodesetEditWidget(QtWidgets.QWidget):
             code_name = current_item.text()
             self.codeset.codes[code_name]['description'] = self.box_desc.toPlainText()
 
-
     def back(self):
-
-        widget = HomeWidget(self.parentWidget())
-        self.parentWidget().setCentralWidget(widget)
+        self.close()
+        self.mainwindow.reset_central_widget()
 
 

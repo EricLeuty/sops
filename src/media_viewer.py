@@ -9,10 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from sops_widget import SOPSWidget
 from timeline_controller import *
 from video_widget import *
 
-class MediaViewer(QtWidgets.QWidget):
+class MediaViewer(SOPSWidget):
     def __init__(self, parent=None, show_coding_buttons=False):
         super().__init__(parent)
 

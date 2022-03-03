@@ -50,7 +50,7 @@ class CodeSet(object):
             print(key, ' : ', value)
 
 
-class Code(object):
+class CodeItem(object):
     def __init__(self, code_name, description=None, icon_path=None):
         self.code_name = code_name
         self.data = {
@@ -61,18 +61,18 @@ class Code(object):
 
 if __name__ == '__main__':
     codes = []
-    codes.append(Code("L", description="Listening to TA, video or student presentation as a class."))
-    codes.append(Code("Lab", description="Performing the lab activity."))
-    codes.append(Code("TQ", description="Taking a test or quiz."))
-    codes.append(Code("SQ", description="Asking the TA a lab-related question with entire class listening."))
-    codes.append(Code("1o1-SQ", description="Individual student or a group of students asking the TA a lab-related question."))
-    codes.append(Code("WC", description="Engaging in a whole class discussion often facilitated by TA."))
-    codes.append(Code("Prd", description="Making a prediction about the outcome of a demo or experiment."))
-    codes.append(Code("SP", description="Giving a presentation."))
-    codes.append(Code("SI", description="Initiating one-on-one interaction with the TA."))
-    codes.append(Code("SL", description="Leaving the lab for the day."))
-    codes.append(Code("W", description="Waiting."))
-    codes.append(Code("O", description="Other."))
+    codes.append(CodeItem("L", description="Listening to TA, video or student presentation as a class."))
+    codes.append(CodeItem("Lab", description="Performing the lab activity."))
+    codes.append(CodeItem("TQ", description="Taking a test or quiz."))
+    codes.append(CodeItem("SQ", description="Asking the TA a lab-related question with entire class listening."))
+    codes.append(CodeItem("1o1-SQ", description="Individual student or a group of students asking the TA a lab-related question."))
+    codes.append(CodeItem("WC", description="Engaging in a whole class discussion often facilitated by TA."))
+    codes.append(CodeItem("Prd", description="Making a prediction about the outcome of a demo or experiment."))
+    codes.append(CodeItem("SP", description="Giving a presentation."))
+    codes.append(CodeItem("SI", description="Initiating one-on-one interaction with the TA."))
+    codes.append(CodeItem("SL", description="Leaving the lab for the day."))
+    codes.append(CodeItem("W", description="Waiting."))
+    codes.append(CodeItem("O", description="Other."))
 
     codeset = CodeSet("LOPUS_student_behavior")
 

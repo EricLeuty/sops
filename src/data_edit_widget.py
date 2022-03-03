@@ -1,9 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from sops_widget import SOPSWidget
 from observation import *
 import math
 NUM_COLUMNS = 4
 
-class CodeWidget(QtWidgets.QWidget):
+class DataEditWidget(SOPSWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -49,7 +50,7 @@ class CodeWidget(QtWidgets.QWidget):
     def create_datapoint(self):
         datapoint = Datum(self.student.currentText(), self.current_code, "Device_1", self.start_time.value())
         self.parentWidget().session.add_datum(datapoint)
-        self.parentWidget().session.data.print()
+        self.parentWidget().refresh_data()
         self.parentWidget().hide_code_widget()
 
 
@@ -58,7 +59,7 @@ class CodeWidget(QtWidgets.QWidget):
 
 def main():
     app = QtWidgets.QApplication([])
-    widget = CodeWidget()
+    widget = DataEditWidget()
     widget.show()
     app.exec_()
 

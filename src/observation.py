@@ -34,13 +34,16 @@ class Datum(object):
 if __name__ == '__main__':
     date = datetime.datetime.today()
     thing = Datum(1234, "CODE1", "VID1", date)
+    thing2 = Datum(1235, "CODE1", "VID1", date)
+
     data = DataSet()
     print(data)
 
     print()
 
     data.add_datum(thing)
-    data.add_datum(thing)
-    print(data.data.head())
+    data.add_datum(thing2)
+    for i in data.data.iloc[:,0]:
+        print(i)
 
 

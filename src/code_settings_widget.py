@@ -1,8 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from code import *
-from codeset_edit_widget import *
+from sops_widget import SOPSWidget
+from codeset_edit_widget import CodesetEditWidget
 
-class CodeSettingsWidget(QtWidgets.QWidget):
+class CodeSettingsWidget(SOPSWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.grid_layout = QtWidgets.QGridLayout(self)
@@ -30,8 +30,12 @@ class CodeSettingsWidget(QtWidgets.QWidget):
     def codeset_open(self, current_item):
         if current_item is not None:
             codeset_name = current_item.text()
-            widget = CodesetEditWidget(self.parentWidget().parentWidget(), codeset_name)
-            self.parentWidget().parentWidget().setCentralWidget(widget)
+            widget = CodesetEditWidget(self.mainwindow, codeset_name)
+            self.mainwindow.setCentralWidget(widget)
+
+
+
+
 
 
 def main():
