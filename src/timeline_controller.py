@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
 
 class TimelineController(SOPSWidget):
-    def __init__(self, parent=None, show_coding_buttons=False, duration=30526):
+    def __init__(self, parent=None, duration=30526):
         super().__init__(parent)
         self.minimumHeight = 100
         self.timelineControlGrid = QtWidgets.QGridLayout(self)
@@ -28,32 +28,14 @@ class TimelineController(SOPSWidget):
         self.timelineSlider = QtWidgets.QSlider(self)
         self.timelineSlider.setOrientation(QtCore.Qt.Orientation.Horizontal)
 
-        if show_coding_buttons:
-            self.button_add_code = QtWidgets.QPushButton("Add Datapoint", self)
-            self.button_show_data = QtWidgets.QPushButton("Show Datapoints", self)
-            self.button_show_data.setCheckable(True)
+        self.timelineControlGrid.addWidget(self.toStart, 0, 0)
+        self.timelineControlGrid.addWidget(self.fastBackward, 0, 1)
+        self.timelineControlGrid.addWidget(self.playPause, 0, 2)
+        self.timelineControlGrid.addWidget(self.fastForward, 0, 3)
+        self.timelineControlGrid.addWidget(self.toEnd, 0, 4)
+        self.timelineControlGrid.addWidget(self.timelineSlider, 1, 0, 1, 5)
 
-            self.button_add_code.clicked.connect(lambda state: self.parentWidget().parentWidget().show_code_widget())
-            self.button_show_data.toggled.connect(self.show_codes)
 
-            self.timelineControlGrid.addWidget(self.button_add_code, 0, 0, 1, 2)
-            self.timelineControlGrid.addWidget(self.button_show_data, 0, 3, 1, 2)
-            self.timelineControlGrid.addWidget(self.toStart, 1, 0)
-            self.timelineControlGrid.addWidget(self.fastBackward, 1, 1)
-            self.timelineControlGrid.addWidget(self.playPause, 1, 2)
-            self.timelineControlGrid.addWidget(self.fastForward, 1, 3)
-            self.timelineControlGrid.addWidget(self.toEnd, 1, 4)
-            self.timelineControlGrid.addWidget(self.timelineSlider, 2, 0, 1, 5)
-        else:
-            self.timelineControlGrid.addWidget(self.toStart, 0, 0)
-            self.timelineControlGrid.addWidget(self.fastBackward, 0, 1)
-            self.timelineControlGrid.addWidget(self.playPause, 0, 2)
-            self.timelineControlGrid.addWidget(self.fastForward, 0, 3)
-            self.timelineControlGrid.addWidget(self.toEnd, 0, 4)
-            self.timelineControlGrid.addWidget(self.timelineSlider, 1, 0, 1, 5)
-
-    def show_codes(self):
-        print("Do something")
 
 
 

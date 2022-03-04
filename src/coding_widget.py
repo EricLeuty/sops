@@ -15,38 +15,77 @@ class CodingWidget(SOPSWidget):
 
         self.media_viewer = MediaViewer(self, True)
         self.code_widget = DataEditWidget(self)
-        self.data_list = QtWidgets.QListWidget()
-        self.dock = QtWidgets.QDockWidget()
-        self.dock.setWidget(self.data_list)
-        self.mainwindow.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.dock)
-
-        self.grid_layout.addWidget(self.media_viewer, 0, 0, 1, 1)
-
-        self.update_data()
+        self.code_widget.setMinimumWidth(300)
+        self.data_list = QtWidgets.QTableWidget(self)
+        self.data_list.setMinimumWidth(200)
 
 
-    def show_code_widget(self):
-        time = self.media_viewer.videoGroup.player.position()
-        self.code_widget.update_time(time)
-        self.grid_layout.addWidget(self.code_widget, 0, 1, 1, 1)
-        self.code_widget.show()
+        self.data_tab = QtWidgets.QTabWidget()
+        self.data_tab.setTabPosition(2)
+        self.data_tab.addTab(self.data_list, "Data")
 
-    def hide_code_widget(self):
-        self.code_widget.hide()
-        self.grid_layout.removeWidget(self.code_widget)
+        self.code_tab = QtWidgets.QTabWidget()
+        self.code_tab.setTabPosition(3)
+        self.code_tab.addTab(self.code_widget, "Add Data")
+
+
+
+
+
+        self.grid_layout.addWidget(self.data_tab, 0, 0, 1, 1)
+        self.grid_layout.addWidget(self.media_viewer, 0, 1, 1, 1)
+        self.grid_layout.addWidget(self.code_tab, 0, 2, 1, 1)
+
+        self.data_tab.tabBarClicked.connect(self.data_tab_clicked)
+        self.code_tab.tabBarClicked.connect(self.code_tab_clicked)
         self.update_data()
 
     def update_data(self):
         self.data_list.clear()
-        for row in self.session.data.data.iloc[:, 0]:
-            temp = QtWidgets.QListWidgetItem(row)
-            self.data_list.addItem(temp)
-        self.data_list.update()
-
+        shape = self.session.data.shape
+        self.data_list.setRowCount(shape[0])
+        self.data_list.setColumnCount(shape[1])
+        self.data_list.setHorizontalHeaderLabels(self.session.data.columns)
+        for row in range(shape[0]):
+            item = self.session.data.iloc[row]
+            for col in range(shape[1]):
+                temp = QtWidgets.QTableWidgetItem(str(item[col]))
+                self.data_list.setItem(row, col, temp)
 
     def refresh_data(self):
         self.session.save()
         self.session = Session.load(self.session_name)
+        self.update_data()
+
+    def data_tab_clicked(self, index):
+        widget = self.data_tab.widget(index)
+        visible = widget.isVisible()
+        widget.setVisible(not visible)
+        tab_size = self.data_tab.size()
+        if visible is True:
+            self.data_tab.setFixedWidth(tab_size.width() - widget.minimumWidth())
+        else:
+            self.update_data()
+            self.data_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
+
+
+        self.grid_layout.update()
+
+    def code_tab_clicked(self, index):
+        time = self.media_viewer.videoGroup.player.position()
+        self.code_widget.update_time(time)
+        widget = self.code_tab.widget(index)
+        visible = widget.isVisible()
+        widget.setVisible(not visible)
+        tab_size = self.code_tab.size()
+        if visible is True:
+            self.code_tab.setFixedWidth(tab_size.width() - widget.minimumWidth())
+        else:
+            self.code_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
+
+
+        self.grid_layout.update()
+
 
 
 def main():

@@ -1,20 +1,17 @@
 import os
 import pickle
 from pathlib import Path
-from observation import *
+from observation import DataSet
 from codes import CodeSet
 
 
-class Session(object):
+class Session(DataSet):
     def __init__(self, name, code_set=None, path_media=None, student_set=None):
+        super().__init__()
         self.name = name
         self.codeset = code_set
         self.path_media = path_media
         self.student_set = student_set
-        self.data = DataSet()
-
-    def add_datum(self, data_point):
-        self.data.add_datum(data_point)
 
     def save(self):
         session_path = Path(os.getcwd()).parent / "Sessions" / self.name

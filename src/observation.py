@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 
-BEHAVIOR_COLUMN_LABELS = ["Student ID", "Behavior Code", "Data Source ID", "Time"]
+BEHAVIOR_COLUMN_LABELS = ["Student ID", "Behavior Code", "Data Source ID"]
 
 class DataSet(object):
     def __init__(self):

@@ -8,6 +8,8 @@ class DataEditWidget(SOPSWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.parent = parent
+
         self.current_code = ""
         self.gridlayout = QtWidgets.QGridLayout(self)
 
@@ -28,7 +30,7 @@ class DataEditWidget(SOPSWidget):
 
             idx += 1
 
-        for student in self.parentWidget().session.student_set:
+        for student in self.parent.session.student_set:
             self.student.addItem(student)
 
         self.gridlayout.addWidget(self.start_time, 0, 0, 1, NUM_COLUMNS)
@@ -37,7 +39,7 @@ class DataEditWidget(SOPSWidget):
         self.gridlayout.addWidget(self.create, idx // NUM_COLUMNS + 2, 2, 1, NUM_COLUMNS // 2)
 
         self.button_group.buttonClicked.connect(lambda event: self.set_code(event))
-        self.cancel.clicked.connect(self.parentWidget().hide_code_widget)
+        self.cancel.clicked.connect(self.parent.code_tab_clicked)
         self.create.clicked.connect(self.create_datapoint)
 
 
@@ -49,9 +51,8 @@ class DataEditWidget(SOPSWidget):
 
     def create_datapoint(self):
         datapoint = Datum(self.student.currentText(), self.current_code, "Device_1", self.start_time.value())
-        self.parentWidget().session.add_datum(datapoint)
-        self.parentWidget().refresh_data()
-        self.parentWidget().hide_code_widget()
+        self.parent.session.add_datum(datapoint)
+        self.parent.refresh_data()
 
 
 
