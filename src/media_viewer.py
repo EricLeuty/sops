@@ -14,9 +14,11 @@ from timeline_controller import *
 from video_widget import *
 
 class MediaViewer(SOPSWidget):
-    def __init__(self, parent=None, show_coding_buttons=False):
+    def __init__(self, parent=None, show_coding_buttons=False, session=None):
         super().__init__(parent)
 
+        if session:
+            self.session = session
 
         self.duration = 30526
         self.playmode = 1
@@ -33,10 +35,10 @@ class MediaViewer(SOPSWidget):
         self.timelineController = TimelineController(self, show_coding_buttons)
         self.timelineController.setObjectName("timelineController")
         self.timelineController.setMinimumHeight(50)
-        self.verticalLayout.addWidget(self.timelineController, stretch=1)
-        self.audioGroup = QtWidgets.QWidget(self)
-        self.audioGroup.setObjectName("audioGroup")
-        self.verticalLayout.addWidget(self.audioGroup, stretch=4)
+        self.verticalLayout.addWidget(self.timelineController, stretch=2)
+        #self.audioGroup = QtWidgets.QWidget(self)
+        #self.audioGroup.setObjectName("audioGroup")
+        #self.verticalLayout.addWidget(self.audioGroup, stretch=4)
         self.update_media_state()
 
         self.timelineController.timelineSlider.sliderMoved.connect(lambda x: self.update_position(x))

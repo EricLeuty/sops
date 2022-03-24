@@ -30,8 +30,9 @@ class DataEditWidget(SOPSWidget):
 
             idx += 1
 
-        for student in self.parent.session.student_set:
-            self.student.addItem(student)
+        for student in self.parentWidget().session.studentset.students:
+            temp_student = self.parentWidget().session.studentset.students[student]
+            self.student.addItem(temp_student.to_str(), userData=temp_student)
 
         self.gridlayout.addWidget(self.start_time, 0, 0, 1, NUM_COLUMNS)
         self.gridlayout.addWidget(self.student, 1, 0, 1, NUM_COLUMNS)
@@ -50,8 +51,8 @@ class DataEditWidget(SOPSWidget):
         self.start_time.setValue(time)
 
     def create_datapoint(self):
-        datapoint = Datum(self.student.currentText(), self.current_code, "Device_1", self.start_time.value())
-        self.parent.session.add_datum(datapoint)
+        datapoint = Datum(self.student.currentData().id_number, self.current_code, "Device_1", self.start_time.value())
+        self.parent.session.data.add_datum(datapoint)
         self.parent.refresh_data()
 
 

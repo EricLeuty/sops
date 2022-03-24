@@ -12,13 +12,11 @@ class CodingWidget(SOPSWidget):
 
         self.grid_layout = QtWidgets.QGridLayout(self)
 
-
         self.media_viewer = MediaViewer(self, True)
         self.code_widget = DataEditWidget(self)
         self.code_widget.setMinimumWidth(300)
         self.data_list = QtWidgets.QTableWidget(self)
         self.data_list.setMinimumWidth(200)
-
 
         self.data_tab = QtWidgets.QTabWidget()
         self.data_tab.setTabPosition(2)
@@ -27,10 +25,6 @@ class CodingWidget(SOPSWidget):
         self.code_tab = QtWidgets.QTabWidget()
         self.code_tab.setTabPosition(3)
         self.code_tab.addTab(self.code_widget, "Add Data")
-
-
-
-
 
         self.grid_layout.addWidget(self.data_tab, 0, 0, 1, 1)
         self.grid_layout.addWidget(self.media_viewer, 0, 1, 1, 1)
@@ -42,12 +36,12 @@ class CodingWidget(SOPSWidget):
 
     def update_data(self):
         self.data_list.clear()
-        shape = self.session.data.shape
+        shape = self.session.data.data.shape
         self.data_list.setRowCount(shape[0])
         self.data_list.setColumnCount(shape[1])
-        self.data_list.setHorizontalHeaderLabels(self.session.data.columns)
+        self.data_list.setHorizontalHeaderLabels(self.session.data.data.columns)
         for row in range(shape[0]):
-            item = self.session.data.iloc[row]
+            item = self.session.data.data.iloc[row]
             for col in range(shape[1]):
                 temp = QtWidgets.QTableWidgetItem(str(item[col]))
                 self.data_list.setItem(row, col, temp)

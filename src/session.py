@@ -1,17 +1,19 @@
 import os
 import pickle
 from pathlib import Path
-from observation import DataSet
-from codes import CodeSet
+from src.observation import DataSet
+from src.codes import CodeSet
+from src.person import StudentSet, Student
 
 
-class Session(DataSet):
+class Session(object):
     def __init__(self, name, code_set=None, path_media=None, student_set=None):
         super().__init__()
         self.name = name
         self.codeset = code_set
         self.path_media = path_media
-        self.student_set = student_set
+        self.studentset = student_set
+        self.data = DataSet()
 
     def save(self):
         session_path = Path(os.getcwd()).parent / "Sessions" / self.name
@@ -36,7 +38,7 @@ class Session(DataSet):
 
 
     def print(self):
-        print(self.name)
+        print(self.studentset.print())
 
 
 class SessionSet(object):
@@ -60,8 +62,7 @@ class SessionSet(object):
 
 
 if __name__ == '__main__':
-    students = ["student1", "student2", "student3", "student4", "student5",
-                "student6", "student7", "student8", "student9", "student10"]
+    students = StudentSet.load("Example_student_list")
     media = Path(os.getcwd()).parent / "Media" / "LOPUS.mp4"
     codeset = CodeSet.load("LOPUS_student_behavior")
     session1 = Session("Queens_LOPUS", code_set=codeset, path_media=media, student_set=students)

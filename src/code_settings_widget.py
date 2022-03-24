@@ -20,8 +20,9 @@ class CodeSettingsWidget(SOPSWidget):
             self.codesets.addItem(temp_codeset)
 
         self.grid_layout.addWidget(self.button_new_codeset, 0, 0, 1, 1)
-        self.grid_layout.addWidget(self.button_edit_codeset, 1, 0, 1, 1)
-        self.grid_layout.addWidget(self.button_delete_codeset, 2, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_import_codeset, 1, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_edit_codeset, 2, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_delete_codeset, 3, 0, 1, 1)
         self.grid_layout.addWidget(self.codesets, 0, 1, 5, 1)
 
         self.button_edit_codeset.clicked.connect(lambda state: self.codeset_open(self.codesets.currentItem()))
@@ -32,6 +33,7 @@ class CodeSettingsWidget(SOPSWidget):
             codeset_name = current_item.text()
             widget = CodesetEditWidget(self.mainwindow, codeset_name)
             self.mainwindow.setCentralWidget(widget)
+
 
 
 

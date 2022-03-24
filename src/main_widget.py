@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
+import os
+from os.path import join, isfile
 from session import *
 from codes import *
 from observation import *
@@ -10,10 +12,26 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setObjectName("main_window")
-        self.sessions = ["Queens_LOPUS", "session2"]
-        self.codesets = ["LOPUS_student_behavior"]
+        self.load_data()
         self.resize(960, 720)
         self.setCentralWidget(HomeWidget(self))
+
+    def load_data(self):
+        self.load_sessions()
+        self.load_codesets()
+        self.load_studentsets()
+
+    def load_codesets(self):
+        path = Path(os.getcwd()).parent / "Codesets"
+        self.codesets = [f for f in os.listdir(path) if isfile(join(path, f))]
+
+    def load_studentsets(self):
+        path = Path(os.getcwd()).parent / "Studentsets"
+        self.studentsets = [f for f in os.listdir(path) if isfile(join(path, f))]
+
+    def load_sessions(self):
+        path = Path(os.getcwd()).parent / "Sessions"
+        self.sessions = [f for f in os.listdir(path) if isfile(join(path, f))]
 
 
     def reset_central_widget(self):

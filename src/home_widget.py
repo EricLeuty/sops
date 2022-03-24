@@ -8,10 +8,11 @@ class HomeWidget(SOPSWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("home_widget")
+        self.mainwindow.load_data()
         self.grid_layout = QtWidgets.QGridLayout(self)
 
         self.button_sessions = QtWidgets.QPushButton(text="Sessions")
-        self.button_codes = QtWidgets.QPushButton(text="Codes")
+        self.button_codes = QtWidgets.QPushButton(text="Codesets")
         self.button_settings = QtWidgets.QPushButton(text="Settings")
         self.active_widget = SessionsWidget(self)
 

@@ -27,15 +27,16 @@ class CodeSet(object):
 
 
     def save(self):
-        codeset_path = Path(os.getcwd()).parent / "Codes" / (self.name + ".json")
+        codeset_path = Path(os.getcwd()).parent / "Codesets" / (self.name + ".json")
         codes_json = json.dumps(self.codes)
         f = open(codeset_path, "w")
         f.write(codes_json)
         f.close()
 
 
+
     def load(codeset_name):
-        codeset_path = Path(os.getcwd()).parent / "Codes" / (codeset_name + ".json")
+        codeset_path = Path(os.getcwd()).parent / "Codesets" / codeset_name
         try:
             f = open(codeset_path, "r")
             codes = json.loads(f.readline())
