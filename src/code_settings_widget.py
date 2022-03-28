@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
+from codeset import CodeSet
 from codeset_edit_widget import CodesetEditWidget
 
 class CodeSettingsWidget(SOPSWidget):
@@ -15,9 +16,7 @@ class CodeSettingsWidget(SOPSWidget):
 
         self.codesets = QtWidgets.QListWidget()
 
-        for codeset in self.parentWidget().parentWidget().codesets:
-            temp_codeset = QtWidgets.QListWidgetItem(codeset)
-            self.codesets.addItem(temp_codeset)
+        self.update_codesets()
 
         self.grid_layout.addWidget(self.button_new_codeset, 0, 0, 1, 1)
         self.grid_layout.addWidget(self.button_import_codeset, 1, 0, 1, 1)
@@ -27,12 +26,26 @@ class CodeSettingsWidget(SOPSWidget):
 
         self.button_edit_codeset.clicked.connect(lambda state: self.codeset_open(self.codesets.currentItem()))
         self.codesets.doubleClicked.connect(lambda state: self.codeset_open(self.codesets.currentItem()))
+        self.button_import_codeset.clicked.connect(self.import_codeset_clicked)
 
     def codeset_open(self, current_item):
         if current_item is not None:
             codeset_name = current_item.text()
             widget = CodesetEditWidget(self.mainwindow, codeset_name)
             self.mainwindow.setCentralWidget(widget)
+
+    def import_codeset_clicked(self):
+        filename, filter = QtWidgets.QFileDialog.getOpenFileName(parent=self, caption='Import Codeset')
+        if filename:
+            codeset = CodeSet.load_from_path(filename)
+            codeset.save()
+            self.mainwindow.load_codesets()
+            self.update_codesets()
+
+    def update_codesets(self):
+        for codeset in self.parentWidget().parentWidget().codesets:
+            temp_codeset = QtWidgets.QListWidgetItem(codeset)
+            self.codesets.addItem(temp_codeset)
 
 
 

@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
-from codes import CodeSet, CodeItem
+from codeset import CodeSet, CodeItem
 
 
 class CodesetEditWidget(SOPSWidget):

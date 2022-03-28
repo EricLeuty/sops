@@ -3,8 +3,8 @@ import sys
 import os
 from os.path import join, isfile
 from session import *
-from codes import *
-from observation import *
+from codeset import *
+from dataset import *
 from home_widget import HomeWidget
 
 class MainWindow(QtWidgets.QMainWindow):

@@ -12,6 +12,7 @@ class CodeSet(object):
             self.codes = {}
 
 
+
     def add_code(self, code):
         try:
             self.codes.update({code.code_name: code.data})
@@ -28,7 +29,7 @@ class CodeSet(object):
 
     def save(self):
         codeset_path = Path(os.getcwd()).parent / "Codesets" / (self.name + ".json")
-        codes_json = json.dumps(self.codes)
+        codes_json = json.dumps({'name': self.name, 'codes': self.codes})
         f = open(codeset_path, "w")
         f.write(codes_json)
         f.close()
@@ -39,9 +40,18 @@ class CodeSet(object):
         codeset_path = Path(os.getcwd()).parent / "Codesets" / codeset_name
         try:
             f = open(codeset_path, "r")
-            codes = json.loads(f.readline())
+            codeset = json.loads(f.readline())
             f.close()
-            return CodeSet(codeset_name, codes)
+            return CodeSet(codeset['name'], codeset['codes'])
+        except FileNotFoundError:
+            print("Error: file not found")
+
+    def load_from_path(codeset_path):
+        try:
+            f = open(codeset_path, "r")
+            codeset = json.loads(f.readline())
+            f.close()
+            return CodeSet(codeset['name'], codeset['codes'])
         except FileNotFoundError:
             print("Error: file not found")
 

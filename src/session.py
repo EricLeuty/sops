@@ -1,9 +1,9 @@
 import os
 import pickle
 from pathlib import Path
-from src.observation import DataSet
-from src.codes import CodeSet
-from src.person import StudentSet, Student
+from src.dataset import DataSet
+from src.codeset import CodeSet
+from src.studentset import StudentSet, Student
 
 
 class Session(object):
@@ -28,6 +28,15 @@ class Session(object):
     def load(session_name):
         session_path = Path(os.getcwd()).parent / "Sessions" / session_name
         print(session_path)
+        try:
+            f = open(session_path, "rb")
+            session = pickle.load(f)
+            f.close()
+            return session
+        except FileNotFoundError:
+            print("Error: file not found.")
+
+    def load_from_path(session_path):
         try:
             f = open(session_path, "rb")
             session = pickle.load(f)

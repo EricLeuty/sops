@@ -19,12 +19,13 @@ class DataSet(object):
 
 class Datum(object):
     def __init__(self, student_id, behavior_code, start_time, end_time=None):
-        self.data = {
-            "Student ID": student_id,
-            "Behavior Code": behavior_code,
-            "Start Time": start_time,
-            "End Time": end_time
-        }
+        if isinstance(student_id, int):
+            self.data = {
+                "Student ID": student_id,
+                "Behavior Code": behavior_code,
+                "Start Time": start_time,
+                "End Time": end_time
+            }
 
 
 if __name__ == '__main__':

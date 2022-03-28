@@ -19,11 +19,9 @@ class StudentSet(object):
             print("Error: failed to add code to code set.")
 
 
-    def remove_student(self, student_number):
+    def remove_student(self, id_number):
         try:
-            for student in self.students:
-                if student.student_number == student_number:
-                    self.students.pop(hash(student))
+            self.students.pop(hash(id_number))
         except:
             print("Error: failed to delete code.")
 
@@ -41,6 +39,15 @@ class StudentSet(object):
 
     def load(studentset_name):
         studentset_path = Path(os.getcwd()).parent / "Studentsets" / studentset_name
+        try:
+            f = open(studentset_path, "rb")
+            studentset = pickle.load(f)
+            f.close()
+            return studentset
+        except FileNotFoundError:
+            print("Error: file not found.")
+
+    def load_from_path(studentset_path):
         try:
             f = open(studentset_path, "rb")
             studentset = pickle.load(f)

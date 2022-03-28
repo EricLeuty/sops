@@ -1,67 +1,90 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
-from observation import *
-import math
-NUM_COLUMNS = 4
+from media_viewer import *
+from add_data_widget import *
+from session import Session
 
 class DataEditWidget(SOPSWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, session_name=None):
         super().__init__(parent)
+        self.session_name = session_name
+        self.session = Session.load(session_name)
 
-        self.parent = parent
+        self.grid_layout = QtWidgets.QGridLayout(self)
 
-        self.current_code = ""
-        self.gridlayout = QtWidgets.QGridLayout(self)
+        self.media_viewer = MediaViewer(self, True)
+        self.code_widget = AddDataWidget(self)
+        self.code_widget.setMinimumWidth(300)
+        self.data_list = QtWidgets.QTableWidget(self)
+        self.data_list.setMinimumWidth(200)
 
-        self.start_time = QtWidgets.QSpinBox()
-        self.start_time.setValue(0)
-        self.student = QtWidgets.QComboBox()
-        self.cancel = QtWidgets.QPushButton("Cancel")
-        self.create = QtWidgets.QPushButton("Create")
-        self.button_group = QtWidgets.QButtonGroup(self)
+        self.data_tab = QtWidgets.QTabWidget()
+        self.data_tab.setTabPosition(2)
+        self.data_tab.addTab(self.data_list, "Data")
 
-        idx = 0
-        for code in self.parentWidget().session.codeset.codes:
-            row = idx // NUM_COLUMNS
-            col = idx % NUM_COLUMNS
-            button = QtWidgets.QPushButton(code, self)
-            self.button_group.addButton(button, id=idx)
-            self.gridlayout.addWidget(button, row + 2, col)
+        self.code_tab = QtWidgets.QTabWidget()
+        self.code_tab.setTabPosition(3)
+        self.code_tab.addTab(self.code_widget, "Add Data")
 
-            idx += 1
+        self.grid_layout.addWidget(self.data_tab, 0, 0, 1, 1)
+        self.grid_layout.addWidget(self.media_viewer, 0, 1, 1, 1)
+        self.grid_layout.addWidget(self.code_tab, 0, 2, 1, 1)
 
-        for student in self.parentWidget().session.studentset.students:
-            temp_student = self.parentWidget().session.studentset.students[student]
-            self.student.addItem(temp_student.to_str(), userData=temp_student)
+        self.data_tab.tabBarClicked.connect(self.data_tab_clicked)
+        self.code_tab.tabBarClicked.connect(self.code_tab_clicked)
+        self.update_data()
 
-        self.gridlayout.addWidget(self.start_time, 0, 0, 1, NUM_COLUMNS)
-        self.gridlayout.addWidget(self.student, 1, 0, 1, NUM_COLUMNS)
-        self.gridlayout.addWidget(self.cancel, idx//NUM_COLUMNS + 2, 0, 1, NUM_COLUMNS // 2)
-        self.gridlayout.addWidget(self.create, idx // NUM_COLUMNS + 2, 2, 1, NUM_COLUMNS // 2)
+    def update_data(self):
+        self.data_list.clear()
+        shape = self.session.data.data.shape
+        self.data_list.setRowCount(shape[0])
+        self.data_list.setColumnCount(shape[1])
+        self.data_list.setHorizontalHeaderLabels(self.session.data.data.columns)
+        for row in range(shape[0]):
+            item = self.session.data.data.iloc[row]
+            for col in range(shape[1]):
+                temp = QtWidgets.QTableWidgetItem(str(item[col]))
+                self.data_list.setItem(row, col, temp)
 
-        self.button_group.buttonClicked.connect(lambda event: self.set_code(event))
-        self.cancel.clicked.connect(self.parent.code_tab_clicked)
-        self.create.clicked.connect(self.create_datapoint)
+    def refresh_data(self):
+        self.session.save()
+        self.session = Session.load(self.session_name)
+        self.update_data()
+
+    def data_tab_clicked(self, index):
+        widget = self.data_tab.widget(index)
+        visible = widget.isVisible()
+        widget.setVisible(not visible)
+        tab_size = self.data_tab.size()
+        if visible is True:
+            self.data_tab.setFixedWidth(tab_size.width() - widget.minimumWidth())
+        else:
+            self.update_data()
+            self.data_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
 
 
-    def set_code(self, event):
-        self.current_code = event.text()
+        self.grid_layout.update()
 
-    def update_time(self, time):
-        self.start_time.setValue(time)
+    def code_tab_clicked(self, index):
+        time = self.media_viewer.videoGroup.player.position()
+        self.code_widget.update_time(time)
+        widget = self.code_tab.widget(index)
+        visible = widget.isVisible()
+        widget.setVisible(not visible)
+        tab_size = self.code_tab.size()
+        if visible is True:
+            self.code_tab.setFixedWidth(tab_size.width() - widget.minimumWidth())
+        else:
+            self.code_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
 
-    def create_datapoint(self):
-        datapoint = Datum(self.student.currentData().id_number, self.current_code, "Device_1", self.start_time.value())
-        self.parent.session.data.add_datum(datapoint)
-        self.parent.refresh_data()
 
-
+        self.grid_layout.update()
 
 
 
 def main():
     app = QtWidgets.QApplication([])
-    widget = DataEditWidget()
+    widget = DataEditWidget(session_name="Queens_LOPUS")
     widget.show()
     app.exec_()
 

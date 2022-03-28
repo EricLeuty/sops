@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from sops_widget import SOPSWidget
 from session import *
-from codes import CodeSet
+from codeset import CodeSet
 
 class NewSessionWidget(SOPSWidget):
     def __init__(self, parent=None):
@@ -60,5 +60,5 @@ class NewSessionWidget(SOPSWidget):
         filename, filter = QtWidgets.QFileDialog.getOpenFileName(parent=self, caption='Open file')
         if filename:
             self.media_box.setText(filename)
-        print(filename)
+
 
