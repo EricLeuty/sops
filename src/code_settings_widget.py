@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
 from codeset import CodeSet
-from codeset_edit_widget import CodesetEditWidget
+from dataset_edit_widget import CodesetEditWidget
 
 class CodeSettingsWidget(SOPSWidget):
     def __init__(self, parent=None):

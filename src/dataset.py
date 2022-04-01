@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 
-BEHAVIOR_COLUMN_LABELS = ["Student ID", "Behavior Code", "Start Time", "End Time"]
+BEHAVIOR_COLUMN_LABELS = ["Student ID", "Behavior Code", "Start Time", "End Time", "Device ID"]
 
 class DataSet(object):
     def __init__(self):
@@ -18,13 +18,14 @@ class DataSet(object):
 
 
 class Datum(object):
-    def __init__(self, student_id, behavior_code, start_time, end_time=None):
+    def __init__(self, student_id, behavior_code, start_time, end_time=None, device_id=None):
         if isinstance(student_id, int):
             self.data = {
                 "Student ID": student_id,
                 "Behavior Code": behavior_code,
                 "Start Time": start_time,
-                "End Time": end_time
+                "End Time": end_time,
+                "Device ID": device_id
             }
 
 
