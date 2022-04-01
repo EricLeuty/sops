@@ -11,12 +11,14 @@ class DataEditWidget(SOPSWidget):
         self.session = Session.load(session_name)
 
         self.grid_layout = QtWidgets.QGridLayout(self)
+        self.to_home = QtWidgets.QPushButton("Back")
 
         self.media_viewer = MediaViewer(self, True)
         self.code_widget = AddDataWidget(self)
         self.code_widget.setMinimumWidth(300)
         self.data_list = QtWidgets.QTableWidget(self)
         self.data_list.setMinimumWidth(200)
+
 
         self.data_tab = QtWidgets.QTabWidget()
         self.data_tab.setTabPosition(2)
@@ -26,12 +28,14 @@ class DataEditWidget(SOPSWidget):
         self.code_tab.setTabPosition(3)
         self.code_tab.addTab(self.code_widget, "Add Data")
 
-        self.grid_layout.addWidget(self.data_tab, 0, 0, 1, 1)
+        self.grid_layout.addWidget(self.data_tab, 0, 0, 2, 1)
         self.grid_layout.addWidget(self.media_viewer, 0, 1, 1, 1)
-        self.grid_layout.addWidget(self.code_tab, 0, 2, 1, 1)
+        self.grid_layout.addWidget(self.to_home, 1, 1, 1, 1)
+        self.grid_layout.addWidget(self.code_tab, 0, 2, 2, 1)
 
         self.data_tab.tabBarClicked.connect(self.data_tab_clicked)
         self.code_tab.tabBarClicked.connect(self.code_tab_clicked)
+        self.to_home.clicked.connect(self.mainwindow.reset_central_widget)
         self.update_data()
 
     def update_data(self):

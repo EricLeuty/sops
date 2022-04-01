@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from sops_widget import SOPSWidget
 from data_edit_widget import DataEditWidget
+from data_analysis_widget import DataAnalysisWidget
 from session import Session
 from new_session_widget import NewSessionWidget
 
@@ -15,6 +16,7 @@ class SessionsWidget(SOPSWidget):
 
         self.button_new_session = QtWidgets.QPushButton(text="New Session")
         self.button_import_session = QtWidgets.QPushButton(text="Import Session")
+        self.button_export_session = QtWidgets.QPushButton(text="Export Session")
         self.button_edit = QtWidgets.QPushButton(text="Edit Session Data")
         self.button_analyze = QtWidgets.QPushButton(text="Analyze Session Data")
         self.button_delete = QtWidgets.QPushButton(text="Delete Session")
@@ -24,15 +26,17 @@ class SessionsWidget(SOPSWidget):
 
         self.grid_layout.addWidget(self.button_new_session, 0, 0, 1, 1)
         self.grid_layout.addWidget(self.button_import_session, 1, 0, 1, 1)
-        self.grid_layout.addWidget(self.button_edit, 2, 0, 1, 1)
-        self.grid_layout.addWidget(self.button_analyze, 3, 0, 1, 1)
-        self.grid_layout.addWidget(self.button_delete, 4, 0, 1, 1)
-        self.grid_layout.addWidget(self.recent_sessions, 0, 1, 6, 1)
+        self.grid_layout.addWidget(self.button_export_session, 2, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_edit, 3, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_analyze, 4, 0, 1, 1)
+        self.grid_layout.addWidget(self.button_delete, 5, 0, 1, 1)
+        self.grid_layout.addWidget(self.recent_sessions, 0, 1, 7, 1)
 
         self.button_edit.clicked.connect(self.recent_session_open)
         self.button_analyze.clicked.connect(self.analyze_session_clicked)
         self.recent_sessions.doubleClicked.connect(self.recent_session_open)
         self.button_new_session.clicked.connect(self.new_session)
+        self.button_export_session.clicked.connect(self.export_session_clicked)
         self.button_delete.clicked.connect(self.delete_session_clicked)
 
     def recent_session_open(self):
@@ -46,7 +50,7 @@ class SessionsWidget(SOPSWidget):
         current_item = self.recent_sessions.currentItem()
         if current_item is not None:
             session_name = current_item.text()
-            widget = DataEditWidget(self.mainwindow, session_name)
+            widget = DataAnalysisWidget(self.mainwindow, session_name)
             self.mainwindow.setCentralWidget(widget)
 
     def delete_session_clicked(self):
@@ -75,6 +79,12 @@ class SessionsWidget(SOPSWidget):
             self.mainwindow.load_sessions()
             self.load_sessions()
 
+    def export_session_clicked(self):
+        filename, filter = QtWidgets.QFileDialog.getSaveFileName(parent=self, caption='Export Session Data')
+        if filename:
+            session_name = self.recent_sessions.currentItem().text()
+            active_session = Session.load(session_name)
+            active_session.data.data.to_csv(filename)
 
     def delete_session(self, msg):
         pass
