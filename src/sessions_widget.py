@@ -14,6 +14,7 @@ class SessionsWidget(SOPSWidget):
         self.grid_layout = QtWidgets.QGridLayout(self)
         self.grid_layout.setContentsMargins(0, 0, 0, 0)
 
+
         self.button_new_session = QtWidgets.QPushButton(text="New Session")
         self.button_import_session = QtWidgets.QPushButton(text="Import Session")
         self.button_export_session = QtWidgets.QPushButton(text="Export Session")

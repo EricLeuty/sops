@@ -35,6 +35,12 @@ class TimelineController(SOPSWidget):
         self.timelineControlGrid.addWidget(self.toEnd, 0, 4)
         self.timelineControlGrid.addWidget(self.timelineSlider, 1, 0, 1, 5)
 
+    def set_timeline_max(self, max):
+        self.timelineSlider.setMaximum(max)
+
+    def update_timeline_position(self, position):
+        self.timelineSlider.setValue(position)
+
 
 
 

@@ -20,10 +20,7 @@ class MediaViewer(SOPSWidget):
         if session:
             self.session = session
 
-        self.duration = 30526
-        self.playmode = 1
-        self.position = 0
-        self.playback_speed = 1
+
 
         self.resize(1200, 800)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
@@ -36,17 +33,24 @@ class MediaViewer(SOPSWidget):
         self.timelineController.setObjectName("timelineController")
         self.timelineController.setMinimumHeight(50)
         self.verticalLayout.addWidget(self.timelineController, stretch=2)
-        #self.audioGroup = QtWidgets.QWidget(self)
-        #self.audioGroup.setObjectName("audioGroup")
-        #self.verticalLayout.addWidget(self.audioGroup, stretch=4)
+
+
+        self.duration = self.videoGroup.player.duration()
+        self.playmode = 1
+        self.playback_speed = 1
+
         self.update_media_state()
 
+        self.videoGroup.player.durationChanged.connect(lambda x: self.set_duration(x))
+        self.videoGroup.player.positionChanged.connect(lambda x: self.timelineController.update_timeline_position(x))
         self.timelineController.timelineSlider.sliderMoved.connect(lambda x: self.update_position(x))
         self.timelineController.playPause.clicked.connect(lambda x: self.update_playmode())
         self.timelineController.toStart.clicked.connect(lambda x: self.update_position(0))
         self.timelineController.toEnd.clicked.connect(lambda x: self.update_position(self.duration))
-        self.timelineController.fastBackward.clicked.connect(lambda x: self.fast_backward())
-        self.timelineController.fastForward.clicked.connect(lambda x: self.fast_forward())
+        self.timelineController.fastBackward.clicked.connect(self.fast_backward)
+        self.timelineController.fastForward.clicked.connect(self.fast_forward)
+
+
 
 
     def update_playmode(self):
@@ -59,8 +63,9 @@ class MediaViewer(SOPSWidget):
         self.update_media_state()
 
     def update_position(self, position):
-        self.position = position
-        self.update_media_state()
+        self.videoGroup.player.setPosition(position)
+        self.timelineController.update_timeline_position(position)
+
 
     def fast_backward(self):
         if self.playback_speed == 1.0:
@@ -80,10 +85,15 @@ class MediaViewer(SOPSWidget):
             self.playback_speed = 1.0
         self.update_media_state()
 
+    def set_duration(self, duration):
+        self.duration = duration
+        self.timelineController.set_timeline_max(self.duration)
+
     def update_media_state(self):
         self.videoGroup.set_playmode(self.playmode)
         self.videoGroup.set_playback_speed(self.playback_speed)
-        self.timelineController.timelineSlider.setMaximum(self.duration)
+
+
 
 
 

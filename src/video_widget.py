@@ -31,6 +31,9 @@ class VideoWidget(QVideoWidget):
     def set_duration(self, duration):
         self.duration = duration
 
+    def get_duration(self):
+        return self.player.duration()
+
     def set_position(self, time):
         if time <= self.duration:
             self.player.setPosition(time)

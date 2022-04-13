@@ -37,7 +37,6 @@ if __name__ == '__main__':
     data = DataSet()
     print(data)
 
-    print()
 
     data.add_datum(thing)
     data.add_datum(thing2)

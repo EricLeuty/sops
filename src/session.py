@@ -7,13 +7,14 @@ from src.studentset import StudentSet, Student
 
 
 class Session(object):
-    def __init__(self, name, code_set=None, path_media=None, student_set=None):
+    def __init__(self, name, code_set=None, path_media=None, student_set=None, end_time_enabled=False):
         super().__init__()
         self.name = name
         self.codeset = code_set
         self.path_media = path_media
         self.studentset = student_set
         self.data = DataSet()
+        self.end_time_enabled = end_time_enabled
 
     def save(self):
         session_path = Path(os.getcwd()).parent / "Sessions" / self.name

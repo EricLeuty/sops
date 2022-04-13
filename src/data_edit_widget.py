@@ -2,41 +2,49 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from sops_widget import SOPSWidget
 from media_viewer import *
 from add_data_widget import *
+from src.data_table_widget import DataTableWidget
 from session import Session
+import os
+import pandas as pd
 
 class DataEditWidget(SOPSWidget):
     def __init__(self, parent=None, session_name=None):
         super().__init__(parent)
-        self.session_name = session_name
         self.session = Session.load(session_name)
-
         self.grid_layout = QtWidgets.QGridLayout(self)
         self.to_home = QtWidgets.QPushButton("Back")
 
         self.media_viewer = MediaViewer(self, True)
         self.code_widget = AddDataWidget(self)
-        self.code_widget.setMinimumWidth(300)
-        self.data_list = QtWidgets.QTableWidget(self)
-        self.data_list.setMinimumWidth(200)
 
+        self.data_list = QtWidgets.QTableWidget(self)
+        self.data_list.setMinimumHeight(300)
+        self.code_widget.setMinimumWidth(300)
 
         self.data_tab = QtWidgets.QTabWidget()
-        self.data_tab.setTabPosition(2)
+        self.data_tab.setTabPosition(0)
         self.data_tab.addTab(self.data_list, "Data")
 
         self.code_tab = QtWidgets.QTabWidget()
         self.code_tab.setTabPosition(3)
         self.code_tab.addTab(self.code_widget, "Add Data")
 
-        self.grid_layout.addWidget(self.data_tab, 0, 0, 2, 1)
-        self.grid_layout.addWidget(self.media_viewer, 0, 1, 1, 1)
-        self.grid_layout.addWidget(self.to_home, 1, 1, 1, 1)
-        self.grid_layout.addWidget(self.code_tab, 0, 2, 2, 1)
+        self.media_viewer.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.data_tab.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        self.code_tab.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+
+        self.grid_layout.addWidget(self.media_viewer, 0, 0, 1, 1)
+        self.grid_layout.addWidget(self.to_home, 1, 0, 1, 1)
+        self.grid_layout.addWidget(self.code_tab, 0, 1, 3, 1)
+        self.grid_layout.addWidget(self.data_tab, 2, 0, 1, 1)
 
         self.data_tab.tabBarClicked.connect(self.data_tab_clicked)
         self.code_tab.tabBarClicked.connect(self.code_tab_clicked)
-        self.to_home.clicked.connect(self.mainwindow.reset_central_widget)
+        self.to_home.clicked.connect(self.to_home_clicked)
+        self.media_viewer.videoGroup.player.durationChanged.connect(lambda x: self.code_widget.set_time_maxium(x))
+        self.media_viewer.videoGroup.player.positionChanged.connect(lambda x: self.code_widget.update_time(x))
         self.update_data()
+        self.session.data.data.drop(self.session.data.data[self.session.data.data['Start Time'] > 16000].index, inplace=True)
 
     def update_data(self):
         self.data_list.clear()
@@ -47,12 +55,19 @@ class DataEditWidget(SOPSWidget):
         for row in range(shape[0]):
             item = self.session.data.data.iloc[row]
             for col in range(shape[1]):
-                temp = QtWidgets.QTableWidgetItem(str(item[col]))
+
+                if col == 0:
+                    student = self.session.studentset.students[item[col]]
+                    cell = student.to_str()
+                else:
+                    cell = str(item[col])
+                temp = QtWidgets.QTableWidgetItem(cell)
                 self.data_list.setItem(row, col, temp)
+
 
     def refresh_data(self):
         self.session.save()
-        self.session = Session.load(self.session_name)
+        self.session = Session.load(self.session.name)
         self.update_data()
 
     def data_tab_clicked(self, index):
@@ -61,10 +76,10 @@ class DataEditWidget(SOPSWidget):
         widget.setVisible(not visible)
         tab_size = self.data_tab.size()
         if visible is True:
-            self.data_tab.setFixedWidth(tab_size.width() - widget.minimumWidth())
+            self.data_tab.setFixedHeight(tab_size.height() - widget.minimumHeight())
         else:
             self.update_data()
-            self.data_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
+            self.data_tab.setFixedHeight(tab_size.height() + widget.minimumHeight())
 
 
         self.grid_layout.update()
@@ -81,8 +96,11 @@ class DataEditWidget(SOPSWidget):
         else:
             self.code_tab.setFixedWidth(tab_size.width() + widget.minimumWidth())
 
-
         self.grid_layout.update()
+
+    def to_home_clicked(self):
+        self.media_viewer.videoGroup.player.positionChanged.disconnect()
+        self.mainwindow.reset_central_widget()
 
 
 

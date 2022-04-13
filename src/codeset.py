@@ -9,7 +9,7 @@ class CodeSet(object):
             raise CodeSetError("codeset_name", name, str)
         self.name = name
         if codes is not None:
-            if isinstance(codes, dict):
+            if not isinstance(codes, dict):
                 raise CodeSetError("codes", codes, dict)
             self.codes = codes
         else:
@@ -173,5 +173,6 @@ def LOPUS_Codes():
 
 
 if __name__ == '__main__':
+    LOPUS_Codes()
     TestCodeSet()
 

@@ -43,6 +43,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def reset_central_widget(self):
         self.setCentralWidget(HomeWidget(self))
 
+
+
 class App(QtWidgets.QApplication):
     def __init__(self, arr):
         super().__init__(arr)
