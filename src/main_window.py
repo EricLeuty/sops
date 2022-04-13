@@ -1,3 +1,5 @@
+import warnings
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
@@ -6,6 +8,10 @@ from session import *
 from codeset import *
 from dataset import *
 from home_widget import HomeWidget
+import qdarkstyle
+
+
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -45,6 +51,7 @@ class App(QtWidgets.QApplication):
 
 def main():
     app = App([])
+    app.setStyleSheet(qdarkstyle.load_stylesheet())
     app.exec_()
 
 if __name__ == '__main__':
